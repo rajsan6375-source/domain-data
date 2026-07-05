@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>100% Active Local Domain Dashboard</title>
+    <title>Fast SEO Profile Creation Dashboard</title>
     <style>
         :root {
             --primary-color: #0ea5e9;
@@ -15,6 +15,12 @@
             --border-color: #e2e8f0;
             --success-color: #dcfce7;
             --success-text: #166534;
+            /* New Layout Colors */
+            --orange-column: #ffedd5;
+            --orange-border: #fed7aa;
+            --blue-cell: #e0f2fe;
+            --blue-cell-text: #0369a1;
+            --blue-cell-border: #bae6fd;
         }
 
         * {
@@ -30,35 +36,118 @@
             padding: 15px;
         }
 
-        .container {
-            max-width: 1200px;
+        /* 2-Column Main Layout */
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            max-width: 1600px;
             margin: 0 auto;
+            align-items: flex-start;
         }
 
+        /* Left Side: Data & Management */
+        .left-content {
+            flex: 3;
+            min-width: 0; /* Prevents grid breakout */
+        }
+
+        /* Right Side: Orange Column for SEO Sites */
+        .right-sidebar {
+            flex: 1;
+            min-width: 320px;
+            max-width: 400px;
+            background-color: var(--orange-column);
+            border: 2px solid var(--orange-border);
+            border-radius: 12px;
+            padding: 15px;
+            position: sticky;
+            top: 15px;
+            max-height: calc(100vh - 30px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--orange-border);
+        }
+
+        .sidebar-header h2 {
+            font-size: 16px;
+            color: #ea580c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-header p {
+            font-size: 11px;
+            color: #c2410c;
+        }
+
+        /* Scrollable Area for 200 Cells */
+        .seo-cells-container {
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Blue SEO Cells */
+        .seo-cell {
+            background-color: var(--blue-cell);
+            color: var(--blue-cell-text);
+            border: 1px solid var(--blue-cell-border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+
+        .seo-cell:hover {
+            background-color: #bae6fd;
+            transform: translateX(3px);
+        }
+
+        .seo-cell-num {
+            font-size: 10px;
+            background: #0284c7;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        .seo-cell.copied {
+            background-color: var(--success-color) !important;
+            color: var(--success-text) !important;
+            border-color: #bbf7d0 !important;
+        }
+
+        /* Existing Dashboard Elements */
         header {
             text-align: center;
             margin-bottom: 20px;
             padding: 15px;
-            background: var(--card-bg);
+            background: #ffffff;
             border-radius: 8px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
 
-        header h1 {
-            font-size: 22px;
-            color: var(--primary-hover);
-        }
+        header h1 { font-size: 22px; color: var(--primary-hover); }
+        header p { color: var(--text-muted); font-size: 13px; }
 
-        header p {
-            color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        /* Domain Tabs Row */
         .domain-tabs-container {
             overflow-x: auto;
             white-space: nowrap;
-            background: var(--card-bg);
+            background: #ffffff;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -87,16 +176,14 @@
             border-color: var(--primary-hover);
         }
 
-        /* Data Grid Container */
         .data-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 15px;
         }
 
-        /* Clickable Card Styling */
         .data-card {
-            background: var(--card-bg);
+            background: #ffffff;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 15px;
@@ -109,71 +196,46 @@
             transition: transform 0.1s, background-color 0.1s, border-color 0.1s;
         }
 
-        .data-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary-color);
-        }
+        .data-card:hover { transform: translateY(-2px); border-color: var(--primary-color); }
+        .card-header { font-size: 10px; color: var(--primary-hover); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: bold; display: flex; justify-content: space-between; }
+        .copy-indicator { font-size: 9px; color: var(--text-muted); font-weight: normal; }
+        .card-content { font-size: 14px; color: var(--text-main); word-break: break-word; font-weight: 500; line-height: 1.4; }
+        .data-card.password-field .card-header { color: #e11d48; }
+        .data-card.copied { background-color: var(--success-color) !important; border-color: var(--success-text) !important; }
+        .data-card.copied .card-content, .data-card.copied .copy-indicator { color: var(--success-text); }
 
-        .data-card:active {
-            transform: scale(0.98);
-        }
-
-        .card-header {
-            font-size: 10px;
-            color: var(--primary-hover);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .copy-indicator {
-            font-size: 9px;
-            color: var(--text-muted);
-            font-weight: normal;
-        }
-
-        .card-content {
-            font-size: 14px;
-            color: var(--text-main);
-            word-break: break-word;
-            font-weight: 500;
-            line-height: 1.4;
-        }
-
-        /* Highlight special Password card */
-        .data-card.password-field .card-header {
-            color: #e11d48;
-        }
-
-        /* Success Active State when Copied */
-        .data-card.copied {
-            background-color: var(--success-color) !important;
-            border-color: var(--success-text) !important;
-        }
-        
-        .data-card.copied .card-content {
-            color: var(--success-text);
-        }
-
-        .data-card.copied .copy-indicator {
-            color: var(--success-text);
-            font-weight: bold;
-        }
+        /* Custom Scrollbar for Right Side */
+        .seo-cells-container::-webkit-scrollbar { width: 6px; }
+        .seo-cells-container::-webkit-scrollbar-track { background: var(--orange-column); }
+        .seo-cells-container::-webkit-scrollbar-thumb { background: #fed7aa; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>100% Active Live Local Domain Dashboard</h1>
-        <p>किसी भी बॉक्स पर क्लिक करते ही डेटा तुरंत कॉपी होगा। टैब बदलने के लिए कीबोर्ड Arrow Keys (← →) का उपयोग करें।</p>
-    </header>
+<div class="main-layout">
+    
+    <!-- LEFT SIDE CONTENT AREA -->
+    <div class="left-content">
+        <header>
+            <h1>Fast-Copy Local Business Dashboard</h1>
+            <p>किसी भी बॉक्स पर क्लिक करते ही डेटा तुरंत कॉपी होगा। टैब बदलने के लिए कीबोर्ड Arrow Keys (← →) का उपयोग करें।</p>
+        </header>
 
-    <div id="tabsContainer" class="domain-tabs-container"></div>
-    <div id="dataGrid" class="data-grid"></div>
+        <div id="tabsContainer" class="domain-tabs-container"></div>
+        <div id="dataGrid" class="data-grid"></div>
+    </div>
+
+    <!-- RIGHT SIDE ORANGE COLUMN FOR SEO PROFILE SITES -->
+    <div class="right-sidebar">
+        <div class="sidebar-header">
+            <h2>Off-Page SEO Profile Sites</h2>
+            <p>सेल पर क्लिक करके लिंक कॉपी करें और सीधा साइनअप करें (200+ Live Sites)</p>
+        </div>
+        <div id="seoCellsContainer" class="seo-cells-container">
+            <!-- 200 Blue Cells automatic javascript se generate honge -->
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -291,18 +353,62 @@
         }
     };
 
+    // 200 High DA Social Profile Creation Sites List for SEO
+    const seoWebsites = [
+        "facebook.com", "twitter.com", "linkedin.com", "pinterest.com", "instagram.com",
+        "reddit.com", "tumblr.com", "flickr.com", "quora.com", "medium.com",
+        "vimeo.com", "behance.net", "dribbble.com", "soundcloud.com", "github.com",
+        "about.me", "slideshare.net", "issuu.com", "scribd.com", "goodreads.com",
+        "linktr.ee", "wordpress.com", "blogger.com", "myspace.com", "last.fm",
+        "deviantart.com", "livejournal.com", "wattpad.com", "crunchbase.com", "angel.co",
+        "producthunt.com", "behance.com", "disqus.com", "viki.com", "mix.com",
+        "patreon.com", "kickstarter.com", "indiegogo.com", "bandcamp.com", "mixcloud.com",
+        "dailymotion.com", "twitch.tv", "vimeo.com", "instructables.com", "ted.com",
+        "imgur.com", "photobucket.com", "giphy.com", "unsplash.com", "pixabay.com",
+        "pexels.com", "shutterstock.com", "deviantart.com", "artstation.com", "500px.com",
+        "tripadvisor.com", "yelp.com", "foursquare.com", "zomato.com", "trustpilot.com",
+        "glassdoor.com", "indeed.com", "naukri.com", "monster.com", "upwork.com",
+        "fiverr.com", "freelancer.com", "toptal.com", "guru.com", "peopleperhour.com",
+        "hubpages.com", "ezinearticles.com", "infobarrel.com", "articlesbase.com", "seekingalpha.com",
+        "instructables.com", "wikihow.com", "wikipedia.org", "wiktionary.org", "answers.com",
+        "stackoverflow.com", "superuser.com", "serverfault.com", "askubuntu.com", "stackexchange.com",
+        "sourceforge.net", "bitbucket.org", "gitlab.com", "npmjs.com", "docker.com",
+        "pypi.org", "packagist.org", "rubygems.org", "codepen.io", "jsfiddle.net",
+        "plurk.com", "gab.com", "gettr.com", "mewe.com", "parler.com",
+        "rumble.com", "bitchute.com", "odysee.com", "vlive.tv", "weibo.com",
+        "vk.com", "ok.ru", "xing.com", "viadeo.journaldunet.com", "meetup.com",
+        "eventbrite.com", "allevents.in", "tickettailor.com", "townscript.com", "explara.com",
+        "smugmug.com", "zenfolio.com", "format.com", "pixpa.com", "portfoliobox.net",
+        "wix.com", "weebly.com", "squarespace.com", "webflow.com", "jimdo.com",
+        "strikingly.com", "site123.com", "u craft.com", "webnode.com", "mozello.com",
+        "hubspot.com", "mailchimp.com", "sendinblue.com", "constantcontact.com", "aweber.com",
+        "getresponse.com", "convertkit.com", "activecampaign.com", "mailerlite.com", "moosend.com",
+        "typeform.com", "jotform.com", "wufoo.com", "formstack.com", "google.com/forms",
+        "surveymonkey.com", "typeform.com", "zoho.com/forms", "alchemer.com", "surveyplanet.com",
+        "canvas.lms", "blackboard.com", "moodle.org", "schoology.com", "canvas.net",
+        "coursera.org", "edx.org", "udemy.com", "skillshare.com", "linkedin.com/learning",
+        "pluralsight.com", "futurelearn.com", "udacity.com", "khanacademy.org", "codecademy.com",
+        "academia.edu", "researchgate.net", "mendeley.com", "ssrn.com", "philpapers.org",
+        "orcid.org", "sciprofiles.com", "loop.frontiersin.org", "growkudos.com", "impactstory.org",
+        "reverbnation.com", "audiomack.com", "hearthis.at", "drooble.com", "stageit.com",
+        "zoho.com", "salesforce.com", "hubspot.com", "pipedrive.com", "monday.com",
+        "asana.com", "trello.com", "clickup.com", "wrike.com", "basecamp.com",
+        "slack.com", "microsoft.com/teams", "zoom.us", "skype.com", "discord.com",
+        "telegram.org", "whatsapp.com", "viber.com", "line.me", "wechat.com"
+    ];
+
     let currentTabIndex = 0;
     const headers = Object.keys(sheetData);
 
     window.onload = function() {
         renderTabs();
         setupKeyboardNavigation();
+        renderSeoCells();
     };
 
     function renderTabs() {
         const tabsContainer = document.getElementById('tabsContainer');
         tabsContainer.innerHTML = '';
-
         headers.forEach((domain, index) => {
             const tab = document.createElement('div');
             tab.className = `domain-tab ${index === currentTabIndex ? 'active' : ''}`;
@@ -311,44 +417,36 @@
             tab.onclick = () => switchTab(index);
             tabsContainer.appendChild(tab);
         });
-
         showDomainData(headers[currentTabIndex]);
     }
 
     function switchTab(index) {
         if(index < 0 || index >= headers.length) return;
-        
         document.querySelectorAll('.domain-tab').forEach(t => t.classList.remove('active'));
         currentTabIndex = index;
-        
         const activeTab = document.getElementById(`tab-${index}`);
         activeTab.classList.add('active');
         activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        
         showDomainData(headers[currentTabIndex]);
     }
 
     function setupKeyboardNavigation() {
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                switchTab(currentTabIndex + 1);
-            } else if (e.key === 'ArrowLeft') {
-                switchTab(currentTabIndex - 1);
-            }
+            if (e.key === 'ArrowRight') switchTab(currentTabIndex + 1);
+            else if (e.key === 'ArrowLeft') switchTab(currentTabIndex - 1);
         });
     }
 
     function showDomainData(domain) {
         const dataGrid = document.getElementById('dataGrid');
         dataGrid.innerHTML = '';
-
         const fields = sheetData[domain] || {};
 
         Object.keys(fields).forEach((fieldName) => {
             const fieldValue = fields[fieldName];
             const card = document.createElement('div');
             card.className = `data-card ${fieldName === 'Password' ? 'password-field' : ''}`;
-            card.onclick = () => copyText(fieldValue, card);
+            card.onclick = () => copyText(fieldValue, card, 'Copied!');
             
             card.innerHTML = `
                 <div class="card-header">
@@ -361,16 +459,38 @@
         });
     }
 
-    function copyText(text, cardElement) {
+    // Generate 200 SEO Blue Cells into Orange Column
+    function renderSeoCells() {
+        const container = document.getElementById('seoCellsContainer');
+        container.innerHTML = '';
+
+        seoWebsites.forEach((site, index) => {
+            const cell = document.createElement('div');
+            cell.className = 'seo-cell';
+            const fullUrl = `https://www.${site}`;
+            cell.onclick = () => copyText(fullUrl, cell, 'Copied URL!');
+
+            cell.innerHTML = `
+                <span>${site}</span>
+                <span class="seo-cell-num">#${index + 1}</span>
+            `;
+            container.appendChild(cell);
+        });
+    }
+
+    function copyText(text, element, successMsg) {
         navigator.clipboard.writeText(text).then(() => {
-            cardElement.classList.add('copied');
-            cardElement.querySelector('.copy-indicator').innerText = 'Copied!';
+            element.classList.add('copied');
             
+            // For standard cards
+            const indicator = element.querySelector('.copy-indicator');
+            if(indicator) indicator.innerText = successMsg;
+
             setTimeout(() => {
-                cardElement.classList.remove('copied');
-                cardElement.querySelector('.copy-indicator').innerText = 'Click to Copy';
+                element.classList.remove('copied');
+                if(indicator) indicator.innerText = 'Click to Copy';
             }, 600);
-        }).catch(err => console.error('Copy Error: ', err));
+        }).catch(err => console.error('Copy Error', err));
     }
 
     function escapeHtml(text) {
